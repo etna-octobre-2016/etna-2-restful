@@ -1,3 +1,4 @@
 <?php
-define('DS', DIRECTORY_SEPARATOR);
-require 'src'.DS.'app.php';
+require 'vendors'.DIRECTORY_SEPARATOR.'autoload.php';
+
+$app = new App\Application();

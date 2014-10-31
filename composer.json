@@ -7,5 +7,10 @@
         "monolog/monolog"       : "1.11.0",
         "silex/silex"           : "1.2",
         "symfony/serializer"    : "2.5"
+    },
+    "autoload":{
+        "psr-4":{
+            "App\\": "src/App"
+        }
     }
 }
