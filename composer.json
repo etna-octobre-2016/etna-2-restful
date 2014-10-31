@@ -1,6 +1,6 @@
 {
     "config":{
-        "vendor-dir" : "plugins"
+        "vendor-dir" : "vendors"
     },
     "require":{
         "doctrine/dbal"         : "2.3.5",
