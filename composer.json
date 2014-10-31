@@ -1,0 +1,11 @@
+{
+    "config":{
+        "vendor-dir" : "plugins"
+    },
+    "require":{
+        "doctrine/dbal"         : "2.3.5",
+        "monolog/monolog"       : "1.11.0",
+        "silex/silex"           : "1.2",
+        "symfony/serializer"    : "2.5"
+    }
+}
