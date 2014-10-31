@@ -2,8 +2,10 @@
 
 class Application
 {
-    private $silexApplication;
+    public  $logger;
+
     private $cfg;
+    private $silexApplication;
 
     /* Méthodes magiques */
 
@@ -37,7 +39,13 @@ class Application
 
     private function _initSilexApplication()
     {
-        $this->silexApplication = new \Silex\Application();
+        $app = new \Silex\Application();
+        $app->register(new \Silex\Provider\MonologServiceProvider(),[
+            'monolog.logfile'   => $this->config('logs')->app,
+            'monolog.name'      => 'Application'
+        ]);
+        $this->logger = $app['monolog'];
+        $this->silexApplication = $app;
     }
     private function _fetchConfiguration($filename)
     {

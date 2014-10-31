@@ -5,5 +5,8 @@
         "name"      : "tcm_rest",
         "password"  : "root",
         "username"  : "root"
+    },
+    "logs": {
+        "app": "logs/app.log"
     }
 }
