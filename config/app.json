@@ -1,0 +1,9 @@
+{
+    "database": {
+        "driver"    : "mysql",
+        "hostname"  : "localhost",
+        "name"      : "tcm_rest",
+        "password"  : "root",
+        "username"  : "root"
+    }
+}
