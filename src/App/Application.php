@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use Silex\Application                           as SilexApplication;
+use Silex\Provider\DoctrineServiceProvider      as SilexDoctrineProvider;
 use Silex\Provider\MonologServiceProvider       as SilexMonologProvider;
 use Symfony\Component\HttpFoundation\Request    as SilexRequest;
 
@@ -49,11 +50,29 @@ class Application
     private function _initSilexApplication()
     {
         $app = new SilexApplication();
+        $dbConfig = $this->config('database');
         $app['debug'] = $this->config('debug');
+
+        // Journalisation des erreurs
         $app->register(new SilexMonologProvider(),[
             'monolog.logfile'   => $this->config('logs')->app,
             'monolog.name'      => 'Application'
         ]);
+
+        // Accès à la base de données
+        $app->register(new SilexDoctrineProvider(),[
+            'db.options' => [
+                'charset'   => $dbConfig->charset,
+                'dbname'    => $dbConfig->name,
+                'driver'    => $dbConfig->driver,
+                'host'      => $dbConfig->hostname,
+                'password'  => $dbConfig->password,
+                'port'      => $dbConfig->port,
+                'user'      => $dbConfig->username
+            ]
+        ]);
+
+        $this->db = $app['db'];
         $this->logger = $app['monolog'];
         $this->silexApplication = $app;
     }

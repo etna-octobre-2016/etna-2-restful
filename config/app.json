@@ -1,10 +1,12 @@
 {
     "debug" : true,
     "database": {
-        "driver"    : "mysql",
+        "charset"   : "utf8",
+        "driver"    : "pdo_mysql",
         "hostname"  : "localhost",
         "name"      : "tcm_rest",
         "password"  : "root",
+        "port"      : 3306,
         "username"  : "root"
     },
     "logs": {
