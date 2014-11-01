@@ -1,5 +1,9 @@
 <?php namespace App;
 
+use Silex\Application                           as SilexApplication;
+use Silex\Provider\MonologServiceProvider       as SilexMonologProvider;
+use Symfony\Component\HttpFoundation\Request    as SilexRequest;
+
 class Application
 {
     public  $logger;
@@ -13,6 +17,7 @@ class Application
     {
         $this->_fetchConfiguration('config'.DIRECTORY_SEPARATOR.'app.json');
         $this->_initSilexApplication();
+        $this->_setRoutes();
     }
 
     /* Méthodes publiques */
@@ -32,15 +37,20 @@ class Application
         {
             return $this->cfg->$sectionName;
         }
-        return false;
+        return null;
+    }
+    public function run()
+    {
+        $this->silexApplication->run();
     }
 
     /* Méthodes privées */
 
     private function _initSilexApplication()
     {
-        $app = new \Silex\Application();
-        $app->register(new \Silex\Provider\MonologServiceProvider(),[
+        $app = new SilexApplication();
+        $app['debug'] = $this->config('debug');
+        $app->register(new SilexMonologProvider(),[
             'monolog.logfile'   => $this->config('logs')->app,
             'monolog.name'      => 'Application'
         ]);
@@ -55,5 +65,15 @@ class Application
         {
             $this->cfg = json_decode(file_get_contents($filename));
         }
+    }
+    private function _setRoutes()
+    {
+        // Users
+        $this->silexApplication->get('/user/{id}', function(SilexRequest $request, $id){
+            return Controllers\UsersController::get($this, $request, $id);
+        });
+        $this->silexApplication->get('/users/{id}', function(SilexRequest $request, $id){
+            return Controllers\UsersController::get($this, $request, $id);
+        });
     }
 }

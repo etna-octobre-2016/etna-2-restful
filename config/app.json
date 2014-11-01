@@ -1,4 +1,5 @@
 {
+    "debug" : true,
     "database": {
         "driver"    : "mysql",
         "hostname"  : "localhost",
