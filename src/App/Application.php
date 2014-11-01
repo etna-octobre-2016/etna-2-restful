@@ -3,6 +3,7 @@
 use Silex\Application                           as SilexApplication;
 use Silex\Provider\DoctrineServiceProvider      as SilexDoctrineProvider;
 use Silex\Provider\MonologServiceProvider       as SilexMonologProvider;
+use Silex\Provider\SerializerServiceProvider    as SilexSerializerProvider;
 use Symfony\Component\HttpFoundation\Request    as SilexRequest;
 
 class Application
@@ -44,6 +45,10 @@ class Application
     {
         $this->silexApplication->run();
     }
+    public function serialize($data, $format)
+    {
+        return $this->silexApplication['serializer']->serialize($data, $format);
+    }
 
     /* Méthodes privées */
 
@@ -72,6 +77,9 @@ class Application
             ]
         ]);
 
+        // Sérialisation
+        $app->register(new SilexSerializerProvider());
+
         $this->db = $app['db'];
         $this->logger = $app['monolog'];
         $this->silexApplication = $app;
@@ -79,7 +87,6 @@ class Application
     private function _fetchConfiguration($filename)
     {
         $this->cfg = null;
-
         if (file_exists($filename))
         {
             $this->cfg = json_decode(file_get_contents($filename));
@@ -87,10 +94,12 @@ class Application
     }
     private function _setRoutes()
     {
-        // Users
+        // ressource: /user
         $this->silexApplication->get('/user/{id}', function(SilexRequest $request, $id){
             return Controllers\UsersController::get($this, $request, $id);
         });
+
+        // ressource: /users
         $this->silexApplication->get('/users/{id}', function(SilexRequest $request, $id){
             return Controllers\UsersController::get($this, $request, $id);
         });
