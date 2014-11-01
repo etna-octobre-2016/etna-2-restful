@@ -12,25 +12,27 @@ class UsersController implements iController
     static public function get(Application $app, SilexRequest $request, $id)
     {
         try{
+            $id = (int)$id;
             $sql = 'SELECT id, lastname, firstname, email, role FROM user WHERE id = :id';
-            $params = [ ':id' => (int)$id ];
+            $params = [':id' => $id];
             $types = [PDO::PARAM_INT];
             $pdoStatement = $app->db->executeQuery($sql, $params, $types);
             $user = $pdoStatement->fetch(PDO::FETCH_ASSOC);
             $format = 'json';
+            $headers = ['Content-Type' => 'application/json'];
             if ($user !== false)
             {
                 if ($user['role'] === 'admin')
                 {
-                    return new SilexResponse($app->serialize(['status' => 401, 'message' => 'unauthorized'], $format), 401);
+                    return new SilexResponse($app->serialize(['status' => 401, 'message' => 'unauthorized'], $format), 401, $headers);
                 }
-                return new SilexResponse($app->serialize($user, $format), 200);
+                return new SilexResponse($app->serialize($user, $format), 200, $headers);
             }
-            return new SilexResponse($app->serialize(['status' => 404, 'message' => 'not found'], $format), 404);
+            return new SilexResponse($app->serialize(['status' => 404, 'message' => 'not found'], $format), 404, $headers);
         }
         catch (PDOException $e){
             $app->logger->addFatal($e->getMessage());
-            return new SilexResponse($app->serialize(['status' => 500, 'message' => 'database error'], $format), 500);
+            return new SilexResponse($app->serialize(['status' => 500, 'message' => 'database error'], $format), 500, $headers);
         }
     }
 }
