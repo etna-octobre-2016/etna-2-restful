@@ -49,5 +49,9 @@ class UsersController implements iController
             $app->logger->addFatal($e->getMessage());
             return new SilexResponse($app->serialize(['status' => 500, 'message' => 'database error'], $format), 500, $headers);
         }
+        catch (Exception $e){
+            $app->logger->addFatal($e->getMessage());
+            return new SilexResponse($app->serialize(['status' => 500, 'message' => 'critic error'], $format), 500, $headers);
+        }
     }
 }
