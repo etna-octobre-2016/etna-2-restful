@@ -64,6 +64,10 @@ class UsersController implements iController
             $params = [':id' => $id];
             $i = 0;
             foreach ($obj as $key => $value) {
+                if($key == "id")
+                {
+                 return new SilexResponse($app->serialize(['status' => 409, 'message' => 'You cannot change the id'], $format), 409, $headers);
+                }
                 if($i == 0)
                 {
                     $sql.=' '.$key .'= :'.$key;
@@ -77,7 +81,7 @@ class UsersController implements iController
             $pdoStatement = $app->db->executeQuery($sql, $params);
             $format = 'json';
             $headers = ['Content-Type' => 'application/json'];
-            return new SilexResponse($app->serialize(['status' => 201, 'message' => 'modified'], $format), 201, $headers);
+            return new SilexResponse($app->serialize(['status' => 409, 'message' => 'modified'], $format), 201, $headers);
             //return new SilexResponse($app->serialize($user, $format), 201, $headers);
         }
         catch (PDOException $e){
@@ -95,7 +99,7 @@ class UsersController implements iController
             $pdoStatement = $app->db->executeQuery($sql, $params, $types);
             $format = 'json';
             $headers = ['Content-Type' => 'application/json'];
-            return new SilexResponse($app->serialize($user, $format), 200, $headers);
+            return new SilexResponse($app->serialize(['status' => 201, 'message' => 'deleted'], $format), 201, $headers);
         }
         catch (PDOException $e){
             $app->logger->addFatal($e->getMessage());
