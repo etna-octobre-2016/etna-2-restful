@@ -60,19 +60,18 @@ class UsersController implements iController
         $json = file_get_contents('php://input');
         $obj = json_decode($json);
         try{
-            // $sql = 'UPDATE user SET';
-            // $params = [];
-            // foreach ($obj as $key => $value) {
-            //     $sql.=' '.$key .'= :'.$key;
-            //     $param[] = [':'.$key => $value];
-            // }
-            // $sql.= " where id = :id";
-            // $param[] = [':id' => $id];
-            // $pdoStatement = $app->db->executeQuery($sql, $params);
-            $sql = 'UPDATE user set lastname = "tess" where id = :id';
+            $sql = 'UPDATE user SET';
             $params = [':id' => $id];
-            $types = [PDO::PARAM_INT];
-            $pdoStatement = $app->db->executeQuery($sql, $params, $types);
+            foreach ($obj as $key => $value) {
+                $sql.=' '.$key .'= :'.$key;
+                array_push($params, ':'.$key => $value);
+            }
+            $sql.= " where id = :id";
+            $pdoStatement = $app->db->executeQuery($sql, $params);
+            // $sql = 'UPDATE user set lastname = "tess" where id = :id';
+            // $params = [':id' => $id];
+            // $types = [PDO::PARAM_INT];
+            // $pdoStatement = $app->db->executeQuery($sql, $params, $types);
             $format = 'json';
             $headers = ['Content-Type' => 'application/json'];
             return new SilexResponse($app->serialize($user, $format), 201, $headers);
