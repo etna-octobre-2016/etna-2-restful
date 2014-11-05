@@ -108,7 +108,7 @@ class Application
             return Controllers\UsersController::post($this, $request);
         });
 
-        $this->silexApplication->put('/users/{id}', function(SilexRequest $request, $id){
+        $this->silexApplication->put('/use/{id}', function(SilexRequest $request, $id){
             return Controllers\UsersController::get($this, $request, $id);
         });
     }
