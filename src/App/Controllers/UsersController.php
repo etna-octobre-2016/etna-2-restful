@@ -56,6 +56,7 @@ class UsersController implements iController
 
     static public function put(Application $app, SilexRequest $request, $id)
     {
+        $id = (int)$id;
         $json = file_get_contents('php://input');
         $obj = json_decode($json);
         try{
@@ -72,6 +73,23 @@ class UsersController implements iController
             $headers = ['Content-Type' => 'application/json'];
             //return new SilexResponse($app->serialize(['status' => 200, 'message' => $sql], $format), 200, $headers);
             return new SilexResponse($app->serialize($user, $format), 201, $headers);
+        }
+        catch (PDOException $e){
+            $app->logger->addFatal($e->getMessage());
+            return new SilexResponse($app->serialize(['status' => 500, 'message' => 'database error'], $format), 500, $headers);
+        }
+    }
+    static public function delete(Application $app, SilexRequest $request, $id)
+    {
+        try{
+            $id = (int)$id;
+            $sql = 'DELETE from user where id = :id';
+            $params = [':id' => $id];
+            $types = [PDO::PARAM_INT];
+            $pdoStatement = $app->db->executeQuery($sql, $params, $types);
+            $format = 'json';
+            $headers = ['Content-Type' => 'application/json'];
+            return new SilexResponse($app->serialize($user, $format), 200, $headers);
         }
         catch (PDOException $e){
             $app->logger->addFatal($e->getMessage());

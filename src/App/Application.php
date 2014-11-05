@@ -109,7 +109,10 @@ class Application
         });
 
         $this->silexApplication->put('/users/{id}', function(SilexRequest $request, $id){
-            return Controllers\UsersController::get($this, $request, $id);
+            return Controllers\UsersController::put($this, $request, $id);
+        });
+        $this->silexApplication->delete('/users/{id}', function(SilexRequest $request, $id){
+            return Controllers\UsersController::delete($this, $request, $id);
         });
     }
 }
