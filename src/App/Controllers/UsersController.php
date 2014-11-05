@@ -45,12 +45,36 @@ class UsersController implements iController
             $pdoStatement = $app->db->executeQuery($sql, $params);
             $format = 'json';
             $headers = ['Content-Type' => 'application/json'];
-            return new SilexResponse($app->serialize($user, $format), 200, $headers);
+            return new SilexResponse($app->serialize($user, $format), 201, $headers);
         }
         catch (PDOException $e){
             $app->logger->addFatal($e->getMessage());
             return new SilexResponse($app->serialize(['status' => 500, 'message' => 'database error'], $format), 500, $headers);
         }
 
+    }
+
+    static public function put(Application $app, SilexRequest $request, $id)
+    {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json);
+        try{
+            $sql = 'UPDATE user SET';
+            $params = [];
+            foreach ($obj as $key => $value) {
+                $sql.=' '.$key '= :'.$key;
+                $param[] = { ':'.$key => $value};
+            }
+            $sql.= " where id = :id";
+            $param[] = {':id' => $id};
+            $pdoStatement = $app->db->executeQuery($sql, $params);
+            $format = 'json';
+            $headers = ['Content-Type' => 'application/json'];
+            return new SilexResponse($app->serialize($user, $format), 201, $headers);
+        }
+        catch (PDOException $e){
+            $app->logger->addFatal($e->getMessage());
+            return new SilexResponse($app->serialize(['status' => 500, 'message' => 'database error'], $format), 500, $headers);
+        }
     }
 }
