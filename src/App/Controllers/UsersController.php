@@ -63,10 +63,10 @@ class UsersController implements iController
             $params = [];
             foreach ($obj as $key => $value) {
                 $sql.=' '.$key .'= :'.$key;
-                $param[] = { ':'.$key => $value};
+                $param[] = [':'.$key => $value];
             }
             $sql.= " where id = :id";
-            $param[] = {':id' => $id};
+            $param[] = [':id' => $id];
             $pdoStatement = $app->db->executeQuery($sql, $params);
             $format = 'json';
             $headers = ['Content-Type' => 'application/json'];
