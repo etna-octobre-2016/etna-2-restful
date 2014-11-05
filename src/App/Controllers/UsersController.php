@@ -43,6 +43,8 @@ class UsersController implements iController
             $sql = 'INSERT into user (lastname, firstname, email, password, role) VALUES (:lastname, :firstname, :email, :password, :role)';
             $params = [':lastname' => $obj->{'lastname'}, ':firstname' => $obj->{'firstname'}, ':email' => $obj->{'email'}, ':password' => $obj->{'password'}, ':role' => $obj->{'role'}];
             $pdoStatement = $app->db->executeQuery($sql, $params);
+            $format = 'json';
+            $headers = ['Content-Type' => 'application/json'];
             return new SilexResponse($app->serialize($user, $format), 200, $headers);
         }
         catch (PDOException $e){
