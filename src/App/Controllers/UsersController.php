@@ -60,6 +60,8 @@ class UsersController implements iController
         $json = file_get_contents('php://input');
         $obj = json_decode($json);
         try{
+            $format = 'json';
+            $headers = ['Content-Type' => 'application/json'];
             $sql = 'UPDATE user SET';
             $params = [':id' => $id];
             $i = 0;
@@ -81,8 +83,6 @@ class UsersController implements iController
             }
             $sql.= " where id = :id";
             $pdoStatement = $app->db->executeQuery($sql, $params);
-            $format = 'json';
-            $headers = ['Content-Type' => 'application/json'];
             return new SilexResponse($app->serialize(['status' => 201, 'message' => 'modified'], $format), 201, $headers);
             //return new SilexResponse($app->serialize($user, $format), 201, $headers);
         }
