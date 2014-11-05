@@ -62,16 +62,16 @@ class UsersController implements iController
         try{
             $sql = 'UPDATE user SET';
             $params = [':id' => $id];
+            $i = 0;
             foreach ($obj as $key => $value) {
-                $sql.=' '.$key .'= :'.$key;
+                if($i == 0)
+                    $sql.=' '.$key .'= :'.$key;
+                else
+                    $sql.=' ,'.$key .'= :'.$key;
                 $params[':'.$key] = $obj->{$key};
             }
             $sql.= " where id = :id";
             $pdoStatement = $app->db->executeQuery($sql, $params);
-            // $sql = 'UPDATE user set lastname = "tess" where id = :id';
-            // $params = [':id' => $id];
-            // $types = [PDO::PARAM_INT];
-            // $pdoStatement = $app->db->executeQuery($sql, $params, $types);
             $format = 'json';
             $headers = ['Content-Type' => 'application/json'];
             return new SilexResponse($app->serialize($user, $format), 201, $headers);
