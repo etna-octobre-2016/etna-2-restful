@@ -42,7 +42,7 @@ class UsersController implements iController
         $obj = json_decode($json);
         $format = 'json';
         $headers = ['Content-Type' => 'application/json'];
-        return new SilexResponse($app->serialize(['status' => 200, 'message' => var_dump($json), $format), 200, $headers);
+        return new SilexResponse($app->serialize(['status' => 200, 'message' => var_dump($json)], $format), 200, $headers);
         // try{
         //     $sql = 'INSERT into user (lastname, firstname, email, password, role) VALUES (:lastname, :firstname, :email, :password, :role)';
         //     $params = [':lastname' => $obj->{'lastname'}, ':firstname' => $obj->{'firstname'}, ':email' => $obj->{'email'}, ':password' => $obj->{'password'}, ':role' => $obj->{'role'}];
