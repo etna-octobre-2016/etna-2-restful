@@ -39,6 +39,7 @@ class UsersController implements iController
     static public function post(Application $app, SilexRequest $request)
     {
         $json = file_get_contents('php://input');
+        $json = utf8_encode($json);
         $obj = json_decode($json);
         // $format = 'json';
         // $headers = ['Content-Type' => 'application/json'];
