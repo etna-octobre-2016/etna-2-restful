@@ -65,7 +65,10 @@ class UsersController implements iController
             $i = 0;
             foreach ($obj as $key => $value) {
                 if($i == 0)
+                {
                     $sql.=' '.$key .'= :'.$key;
+                    $i++;
+                }
                 else
                     $sql.=' ,'.$key .'= :'.$key;
                 $params[':'.$key] = $obj->{$key};
