@@ -39,19 +39,18 @@ class UsersController implements iController
     static public function post(Application $app, SilexRequest $request)
     {
         $json = file_get_contents('php://input');
-        $json = utf8_encode($json);
         $obj = json_decode($json);
-        // $format = 'json';
-        // $headers = ['Content-Type' => 'application/json'];
-        // return new SilexResponse($app->serialize(['status' => 200, 'message' => 'test'], $format), 200, $headers);
-        try{
-            $sql = 'INSERT into user (lastname, firstname, email, password, role) VALUES (:lastname, :firstname, :email, :password, :role)';
-            $params = [':lastname' => $obj->{'lastname'}, ':firstname' => $obj->{'firstname'}, ':email' => $obj->{'email'}, ':password' => $obj->{'password'}, ':role' => $obj->{'role'}];
-            $pdoStatement = $app->db->executeQuery($sql, $params);
-        }
-        catch (PDOException $e){
-            $app->logger->addFatal($e->getMessage());
-            return new SilexResponse($app->serialize(['status' => 500, 'message' => 'database error'], $format), 500, $headers);
-        }
+        $format = 'json';
+        $headers = ['Content-Type' => 'application/json'];
+        return new SilexResponse($app->serialize(['status' => 200, 'message' => print_r($obj)], $format), 200, $headers);
+        // try{
+        //     $sql = 'INSERT into user (lastname, firstname, email, password, role) VALUES (:lastname, :firstname, :email, :password, :role)';
+        //     $params = [':lastname' => $obj->{'lastname'}, ':firstname' => $obj->{'firstname'}, ':email' => $obj->{'email'}, ':password' => $obj->{'password'}, ':role' => $obj->{'role'}];
+        //     $pdoStatement = $app->db->executeQuery($sql, $params);
+        // }
+        // catch (PDOException $e){
+        //     $app->logger->addFatal($e->getMessage());
+        //     return new SilexResponse($app->serialize(['status' => 500, 'message' => 'database error'], $format), 500, $headers);
+        // }
     }
 }
