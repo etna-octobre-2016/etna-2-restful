@@ -64,7 +64,7 @@ class UsersController implements iController
             $params = [':id' => $id];
             foreach ($obj as $key => $value) {
                 $sql.=' '.$key .'= :'.$key;
-                array_push($params, ':'.$key => $value);
+                $params[':'.$key] = $values;
             }
             $sql.= " where id = :id";
             $pdoStatement = $app->db->executeQuery($sql, $params);
