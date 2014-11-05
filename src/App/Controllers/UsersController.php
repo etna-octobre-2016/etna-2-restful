@@ -74,14 +74,16 @@ class UsersController implements iController
                     $i++;
                 }
                 else
+                {
                     $sql.=' ,'.$key .'= :'.$key;
+                }
                 $params[':'.$key] = $obj->{$key};
             }
             $sql.= " where id = :id";
             $pdoStatement = $app->db->executeQuery($sql, $params);
             $format = 'json';
             $headers = ['Content-Type' => 'application/json'];
-            return new SilexResponse($app->serialize(['status' => 409, 'message' => 'modified'], $format), 201, $headers);
+            return new SilexResponse($app->serialize(['status' => 201, 'message' => 'modified'], $format), 201, $headers);
             //return new SilexResponse($app->serialize($user, $format), 201, $headers);
         }
         catch (PDOException $e){
