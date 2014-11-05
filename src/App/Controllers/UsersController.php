@@ -62,7 +62,7 @@ class UsersController implements iController
             $sql = 'UPDATE user SET';
             $params = [];
             foreach ($obj as $key => $value) {
-                $sql.=' '.$key '= :'.$key;
+                $sql.=' '.$key .'= :'.$key;
                 $param[] = { ':'.$key => $value};
             }
             $sql.= " where id = :id";
