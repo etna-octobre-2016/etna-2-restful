@@ -20,6 +20,7 @@ class Application
         $this->_fetchConfiguration('config'.DIRECTORY_SEPARATOR.'app.json');
         $this->_initSilexApplication();
         $this->_setRoutes();
+        $this->_parseData();
     }
 
     /* Méthodes publiques */
@@ -120,6 +121,17 @@ class Application
         });
         $this->silexApplication->delete('/users/{id}', function(SilexRequest $request, $id){
             return Controllers\UsersController::delete($this, $request, $id);
+        });
+    }
+    private function _parseData()
+    {
+        $this->silexApplication->before(function(SilexRequest $request){
+
+            if (0 === strpos($request->headers->get('Content-Type'), 'application/json'))
+            {
+                $data = json_decode($request->getContent(), true);
+                $request->request->replace(is_array($data) ? $data : array());
+            }
         });
     }
 }
