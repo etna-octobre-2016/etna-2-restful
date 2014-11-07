@@ -34,7 +34,6 @@ class UsersController implements iController
             return new SilexResponse($app->serialize(['status' => 500, 'message' => 'database error'], $format), 500, $headers);
         }
     }
-
     static public function post(Application $app, SilexRequest $request)
     {
         $json = file_get_contents('php://input');
@@ -51,9 +50,7 @@ class UsersController implements iController
             $app->logger->addFatal($e->getMessage());
             return new SilexResponse($app->serialize(['status' => 500, 'message' => 'database error'], $format), 500, $headers);
         }
-
     }
-
     static public function put(Application $app, SilexRequest $request, $id)
     {
         $id = (int)$id;
@@ -83,8 +80,7 @@ class UsersController implements iController
             }
             $sql.= " where id = :id";
             $pdoStatement = $app->db->executeQuery($sql, $params);
-            return new SilexResponse($app->serialize(['status' => 201, 'message' => 'modified'], $format), 201, $headers);
-            //return new SilexResponse($app->serialize($user, $format), 201, $headers);
+            return new SilexResponse($app->serialize(['status' => 200, 'message' => 'modified'], $format), 200, $headers);
         }
         catch (PDOException $e){
             $app->logger->addFatal($e->getMessage());
@@ -101,7 +97,7 @@ class UsersController implements iController
             $pdoStatement = $app->db->executeQuery($sql, $params, $types);
             $format = 'json';
             $headers = ['Content-Type' => 'application/json'];
-            return new SilexResponse($app->serialize(['status' => 201, 'message' => 'deleted'], $format), 201, $headers);
+            return new SilexResponse($app->serialize(['status' => 200, 'message' => 'deleted'], $format), 200, $headers);
         }
         catch (PDOException $e){
             $app->logger->addFatal($e->getMessage());
