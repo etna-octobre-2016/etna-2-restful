@@ -94,20 +94,27 @@ class Application
     }
     private function _setRoutes()
     {
-        // ressource: /user
+        // ressource: /user (deprecated)
         $this->silexApplication->get('/user/{id}', function(SilexRequest $request, $id){
             return Controllers\UsersController::get($this, $request, $id);
+        });
+        $this->silexApplication->post('/user', function(SilexRequest $request){
+            return Controllers\UsersController::post($this, $request);
+        });
+        $this->silexApplication->put('/user/{id}', function(SilexRequest $request, $id){
+            return Controllers\UsersController::put($this, $request, $id);
+        });
+        $this->silexApplication->delete('/user/{id}', function(SilexRequest $request, $id){
+            return Controllers\UsersController::delete($this, $request, $id);
         });
 
         // ressource: /users
         $this->silexApplication->get('/users/{id}', function(SilexRequest $request, $id){
             return Controllers\UsersController::get($this, $request, $id);
         });
-
         $this->silexApplication->post('/users', function(SilexRequest $request){
             return Controllers\UsersController::post($this, $request);
         });
-
         $this->silexApplication->put('/users/{id}', function(SilexRequest $request, $id){
             return Controllers\UsersController::put($this, $request, $id);
         });
