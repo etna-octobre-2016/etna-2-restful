@@ -3,7 +3,7 @@
 use App\Application as Application;
 use App\Interfaces\iController as iController;
 use PDO;
-use PDOException;
+use Doctrine\DBAL\DBALException;
 use Symfony\Component\HttpFoundation\Request as SilexRequest;
 use Symfony\Component\HttpFoundation\Response as SilexResponse;
 
@@ -30,7 +30,8 @@ class UsersController implements iController
             }
             return new SilexResponse($app->serialize(['status' => 404, 'message' => 'not found'], $format), 404, $headers);
         }
-        catch (PDOException $e){           $app->logger->addFatal($e->getMessage());
+        catch (DBALException $e){
+            $app->logger->addError($e->getMessage());
             return new SilexResponse($app->serialize(['status' => 500, 'message' => 'database error'], $format), 500, $headers);
         }
     }
@@ -46,8 +47,8 @@ class UsersController implements iController
             $headers = ['Content-Type' => 'application/json'];
             return new SilexResponse($app->serialize($user, $format), 201, $headers);
         }
-        catch (PDOException $e){
-            $app->logger->addFatal($e->getMessage());
+        catch (DBALException $e){
+            $app->logger->addError($e->getMessage());
             return new SilexResponse($app->serialize(['status' => 500, 'message' => 'database error'], $format), 500, $headers);
         }
     }
@@ -82,8 +83,8 @@ class UsersController implements iController
             $pdoStatement = $app->db->executeQuery($sql, $params);
             return new SilexResponse($app->serialize(['status' => 200, 'message' => 'modified'], $format), 200, $headers);
         }
-        catch (PDOException $e){
-            $app->logger->addFatal($e->getMessage());
+        catch (DBALException $e){
+            $app->logger->addError($e->getMessage());
             return new SilexResponse($app->serialize(['status' => 500, 'message' => 'database error'], $format), 500, $headers);
         }
     }
@@ -99,8 +100,8 @@ class UsersController implements iController
             $headers = ['Content-Type' => 'application/json'];
             return new SilexResponse($app->serialize(['status' => 200, 'message' => 'deleted'], $format), 200, $headers);
         }
-        catch (PDOException $e){
-            $app->logger->addFatal($e->getMessage());
+        catch (DBALException $e){
+            $app->logger->addError($e->getMessage());
             return new SilexResponse($app->serialize(['status' => 500, 'message' => 'database error'], $format), 500, $headers);
         }
     }
