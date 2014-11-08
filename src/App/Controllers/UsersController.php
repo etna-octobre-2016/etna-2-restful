@@ -141,44 +141,39 @@ class UsersController implements iController
     }
     static public function put(Application $app, SilexRequest $request, $id)
     {
-        $id = (int)$id;
-        $json = file_get_contents('php://input');
-        $obj = json_decode($json);
         $format = 'json';
         $headers = ['Content-Type' => 'application/json'];
+        if (!is_numeric($id))
+        {
+            return new SilexResponse(
+                $app->serialize(
+                    [
+                        'status'    => self::STATUS_CONFLICT,
+                        'message'   => 'the id is not a number'
+                    ],
+                    $format
+                ),
+                self::STATUS_CONFLICT,
+                $headers
+            );
+        }
         try{
-            $sql = 'UPDATE user SET';
-            $params = [':id' => $id];
-            $i = 0;
-            foreach ($obj as $key => $value)
+            $id = (int)$id;
+            $user = [
+                'email'     => $request->request->get('email'),
+                'firstname' => $request->request->get('firstname'),
+                'lastname'  => $request->request->get('lastname'),
+                'password'  => $request->request->get('password'),
+                'role'      => $request->request->get('role')
+            ];
+            foreach ($user as $k => $v)
             {
-                if ($key == "id")
+                if ($v === null)
                 {
-                    return new SilexResponse(
-                        $app->serialize(
-                            [
-                                'status'    => self::STATUS_CONFLICT,
-                                'message'   => 'You cannot change the id'
-                            ],
-                            $format
-                        ),
-                        self::STATUS_CONFLICT,
-                        $headers
-                    );
+                    unset($user[$k]);
                 }
-                if ($i == 0)
-                {
-                    $sql .=' '.$key .'= :'.$key;
-                    $i++;
-                }
-                else
-                {
-                    $sql .=' ,'.$key .'= :'.$key;
-                }
-                $params[':'.$key] = $obj->{$key};
             }
-            $sql.= " where id = :id";
-            $pdoStatement = $app->db->executeQuery($sql, $params);
+            $app->db->update('user', $user, ['id' => $id]);
             return new SilexResponse(
                 $app->serialize(
                     [
