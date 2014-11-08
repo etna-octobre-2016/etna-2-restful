@@ -102,17 +102,24 @@ class UsersController implements iController
     }
     static public function post(Application $app, SilexRequest $request)
     {
-        $json = file_get_contents('php://input');
-        $obj = json_decode($json);
         $format = 'json';
         $headers = ['Content-Type' => 'application/json'];
+        $user = $request->request;
         try{
-            $sql = 'INSERT into user (lastname, firstname, email, password, role) VALUES (:lastname, :firstname, :email, :password, :role)';
-            $params = [':lastname' => $obj->{'lastname'}, ':firstname' => $obj->{'firstname'}, ':email' => $obj->{'email'}, ':password' => $obj->{'password'}, ':role' => $obj->{'role'}];
+            $sql = 'INSERT INTO user (lastname, firstname, email, password, role) VALUES (:lastname, :firstname, :email, :password, :role)';
+            $params = [
+                ':lastname'     => $user->get('lastname'),
+                ':firstname'    => $user->get('firstname'),
+                ':email'        => $user->get('email'),
+                ':password'     => $user->get('password'),
+                ':role'         => $user->get('role')
+            ];
             $pdoStatement = $app->db->executeQuery($sql, $params);
+            $user->remove('password');
+            $user->set('id', $app->db->lastInsertId());
             return new SilexResponse(
-                $app->serialize($user, $format),
-                self::MSG_RESOURCE_CREATED,
+                $app->serialize($user->all(), $format),
+                self::STATUS_CREATED,
                 $headers
             );
         }
