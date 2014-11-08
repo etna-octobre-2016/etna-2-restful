@@ -44,10 +44,9 @@ class UsersController implements iController
                 $headers
             );
         }
-        $id = (int) $id;
         try{
             $sql = 'SELECT id, lastname, firstname, email, role FROM user WHERE id = :id';
-            $params = [':id' => $id];
+            $params = [':id' => (int)$id];
             $types = [PDO::PARAM_INT];
             $pdoStatement = $app->db->executeQuery($sql, $params, $types);
             $user = $pdoStatement->fetch(PDO::FETCH_ASSOC);
@@ -204,10 +203,23 @@ class UsersController implements iController
     {
         $format = 'json';
         $headers = ['Content-Type' => 'application/json'];
+        if (!is_numeric($id))
+        {
+            return new SilexResponse(
+                $app->serialize(
+                    [
+                        'status'    => self::STATUS_CONFLICT,
+                        'message'   => 'the id is not a number'
+                    ],
+                    $format
+                ),
+                self::STATUS_CONFLICT,
+                $headers
+            );
+        }
         try{
-            $id = (int) $id;
             $sql = 'DELETE from user where id = :id';
-            $params = [':id' => $id];
+            $params = [':id' => (int)$id];
             $types = [PDO::PARAM_INT];
             $pdoStatement = $app->db->executeQuery($sql, $params, $types);
             return new SilexResponse(
