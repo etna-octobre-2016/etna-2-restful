@@ -5,6 +5,7 @@ use Silex\Provider\DoctrineServiceProvider      as SilexDoctrineProvider;
 use Silex\Provider\MonologServiceProvider       as SilexMonologProvider;
 use Silex\Provider\SerializerServiceProvider    as SilexSerializerProvider;
 use Symfony\Component\HttpFoundation\Request    as SilexRequest;
+use Symfony\Component\HttpFoundation\Response   as SilexResponse;
 
 class Application
 {
@@ -21,6 +22,7 @@ class Application
         $this->_initSilexApplication();
         $this->_setRoutes();
         $this->_parseData();
+        $this->_removeRequestUriSlash();
     }
 
     /* Méthodes publiques */
@@ -41,6 +43,10 @@ class Application
             return $this->cfg->$sectionName;
         }
         return null;
+    }
+    public function getSilexApplication()
+    {
+        return $this->silexApplication;
     }
     public function run()
     {
@@ -95,32 +101,12 @@ class Application
     }
     private function _setRoutes()
     {
-        // ressource: /user (deprecated)
-        $this->silexApplication->get('/user/{id}', function(SilexRequest $request, $id){
-            return Controllers\UsersController::get($this, $request, $id);
-        });
-        $this->silexApplication->post('/user', function(SilexRequest $request){
-            return Controllers\UsersController::post($this, $request);
-        });
-        $this->silexApplication->put('/user/{id}', function(SilexRequest $request, $id){
-            return Controllers\UsersController::put($this, $request, $id);
-        });
-        $this->silexApplication->delete('/user/{id}', function(SilexRequest $request, $id){
-            return Controllers\UsersController::delete($this, $request, $id);
-        });
+        // user(s)
+        Controllers\UsersController::initRoutes($this);
 
-        // ressource: /users
-        $this->silexApplication->get('/users/{id}', function(SilexRequest $request, $id){
-            return Controllers\UsersController::get($this, $request, $id);
-        });
-        $this->silexApplication->post('/users', function(SilexRequest $request){
-            return Controllers\UsersController::post($this, $request);
-        });
-        $this->silexApplication->put('/users/{id}', function(SilexRequest $request, $id){
-            return Controllers\UsersController::put($this, $request, $id);
-        });
-        $this->silexApplication->delete('/users/{id}', function(SilexRequest $request, $id){
-            return Controllers\UsersController::delete($this, $request, $id);
+        // default
+        $this->silexApplication->get('/', function(){
+            return new SilexResponse('Welcome to the RESTful API', 200);
         });
     }
     private function _parseData()
@@ -133,5 +119,9 @@ class Application
                 $request->request->replace(is_array($data) ? $data : array());
             }
         });
+    }
+    private function _removeRequestUriSlash()
+    {
+        $_SERVER['REQUEST_URI'] = rtrim($_SERVER['REQUEST_URI'], '/') . '/';
     }
 }

@@ -26,6 +26,41 @@ class UsersController implements iController
     const STATUS_OK                 = 200;
     const STATUS_UNAUTHORIZED       = 401;
 
+    static public function initRoutes(Application $app)
+    {
+        $silex  = $app->getSilexApplication();
+        $user   = $silex['controllers_factory'];
+        $users  = $silex['controllers_factory'];
+
+        $users->get('/{id}/', function(SilexRequest $request, $id) use ($app) {
+            return self::get($app, $request, $id);
+        });
+        $users->post('/', function(SilexRequest $request) use ($app) {
+            return self::post($app, $request);
+        });
+        $users->put('/{id}/', function(SilexRequest $request, $id) use ($app) {
+            return self::put($app, $request, $id);
+        });
+        $users->delete('/{id}/', function(SilexRequest $request, $id) use ($app) {
+            return self::delete($app, $request, $id);
+        });
+        $silex->mount('/users', $users);
+
+        /* Deprecated */
+        $user->get('/{id}/', function(SilexRequest $request, $id) use ($app) {
+            return self::get($app, $request, $id);
+        });
+        $user->post('/', function(SilexRequest $request) use ($app) {
+            return self::post($app, $request);
+        });
+        $user->put('/{id}/', function(SilexRequest $request, $id) use ($app) {
+            return self::put($app, $request, $id);
+        });
+        $user->delete('/{id}/', function(SilexRequest $request, $id) use ($app) {
+            return self::delete($app, $request, $id);
+        });
+        $silex->mount('/user', $user);
+    }
     static public function get(Application $app, SilexRequest $request, $id)
     {
         $format = 'json';
