@@ -12,7 +12,8 @@
         "psr-4":{
             "App\\"                 : "src/App",
             "App\\Controllers\\"    : "src/App/Controllers",
-            "App\\Interfaces\\"     : "src/App/Interfaces"
+            "App\\Interfaces\\"     : "src/App/Interfaces",
+            "App\\Models\\"         : "src/App/Models"
         }
     }
 }

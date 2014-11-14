@@ -1,15 +1,18 @@
 <?php namespace App\Controllers;
 
 use App\Application as Application;
+use App\Models\UserModel as User;
 use App\Interfaces\iController as iController;
 use PDO;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\HttpFoundation\Request as SilexRequest;
 use Symfony\Component\HttpFoundation\Response as SilexResponse;
+use Symfony\Component\HttpFoundation\ParameterBag as SilexParameterBag;
 
 class UsersController implements iController
 {
-    // Messages
+    /* Messages */
+
     const MSG_DATABASE_ERROR        = 'Database error';
     const MSG_RESOURCE_CREATED      = 'User created';
     const MSG_RESOURCE_DELETED      = 'User deleted';
@@ -18,13 +21,16 @@ class UsersController implements iController
     const MSG_RESOURCE_UNAUTHORIZED = 'User unauthorized';
     const MSG_RESOURCE_UPDATED      = 'User updated';
 
-    // Codes HTTP
+    /* Codes HTTP */
+
     const STATUS_CONFLICT           = 409;
     const STATUS_CREATED            = 201;
     const STATUS_INTERNAL_ERROR     = 500;
     const STATUS_NOT_FOUND          = 404;
     const STATUS_OK                 = 200;
     const STATUS_UNAUTHORIZED       = 401;
+
+    /* Méthodes publiques */
 
     static public function initRoutes(Application $app)
     {
@@ -80,14 +86,15 @@ class UsersController implements iController
             );
         }
         try{
-            $sql = 'SELECT id, lastname, firstname, email, role FROM user WHERE id = :id';
+            $sql = 'SELECT * FROM user WHERE id = :id';
             $params = [':id' => (int)$id];
             $types = [PDO::PARAM_INT];
             $pdoStatement = $app->db->executeQuery($sql, $params, $types);
-            $user = $pdoStatement->fetch(PDO::FETCH_ASSOC);
-            if ($user !== false)
+            $result = $pdoStatement->fetch(PDO::FETCH_ASSOC);
+            if ($result !== false)
             {
-                if ($user['role'] === 'admin')
+                $user = new User($result);
+                if ($user->get('role') === 'admin')
                 {
                     return new SilexResponse(
                         $app->serialize(
@@ -102,7 +109,7 @@ class UsersController implements iController
                     );
                 }
                 return new SilexResponse(
-                    $app->serialize($user, $format),
+                    $app->serialize($user->all(['password']), $format),
                     self::STATUS_OK,
                     $headers
                 );
@@ -139,7 +146,7 @@ class UsersController implements iController
     {
         $format = 'json';
         $headers = ['Content-Type' => 'application/json'];
-        $user = $request->request;
+        $user = new User($request->request->all());
         try{
             $sql = 'INSERT INTO user (lastname, firstname, email, password, role) VALUES (:lastname, :firstname, :email, :password, :role)';
             $params = [
@@ -150,10 +157,9 @@ class UsersController implements iController
                 ':role'         => $user->get('role')
             ];
             $pdoStatement = $app->db->executeQuery($sql, $params);
-            $user->remove('password');
             $user->set('id', $app->db->lastInsertId());
             return new SilexResponse(
-                $app->serialize($user->all(), $format),
+                $app->serialize($user->all(['password']), $format),
                 self::STATUS_CREATED,
                 $headers
             );
