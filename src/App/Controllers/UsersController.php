@@ -1,37 +1,16 @@
 <?php namespace App\Controllers;
 
 use App\Application as Application;
+use App\ApplicationController as ApplicationController;
 use App\Models\UserModel as User;
-use App\Interfaces\iController as iController;
 use PDO;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\HttpFoundation\Request as SilexRequest;
 use Symfony\Component\HttpFoundation\Response as SilexResponse;
 use Symfony\Component\HttpFoundation\ParameterBag as SilexParameterBag;
 
-class UsersController implements iController
+class UsersController extends ApplicationController
 {
-    /* Messages */
-
-    const MSG_DATABASE_ERROR        = 'Database error';
-    const MSG_RESOURCE_CREATED      = 'User created';
-    const MSG_RESOURCE_DELETED      = 'User deleted';
-    const MSG_RESOURCE_MODIFIED     = 'User modified';
-    const MSG_RESOURCE_NOT_FOUND    = 'User not found';
-    const MSG_RESOURCE_UNAUTHORIZED = 'User unauthorized';
-    const MSG_RESOURCE_UPDATED      = 'User updated';
-
-    /* Codes HTTP */
-
-    const STATUS_CONFLICT           = 409;
-    const STATUS_CREATED            = 201;
-    const STATUS_INTERNAL_ERROR     = 500;
-    const STATUS_NOT_FOUND          = 404;
-    const STATUS_OK                 = 200;
-    const STATUS_UNAUTHORIZED       = 401;
-
-    /* Méthodes publiques */
-
     static public function initRoutes(Application $app)
     {
         $silex  = $app->getSilexApplication();
@@ -219,7 +198,7 @@ class UsersController implements iController
                 $app->serialize(
                     [
                         'status'    => self::STATUS_OK,
-                        'message'   => self::MSG_RESOURCE_MODIFIED
+                        'message'   => self::MSG_RESOURCE_UPDATED
                     ],
                     $format
                 ),
