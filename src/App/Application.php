@@ -50,6 +50,10 @@ class Application
     {
         return $this->silexApplication;
     }
+    public function getUser()
+    {
+        return $this->user;
+    }
     public function run()
     {
         $this->silexApplication->run();
