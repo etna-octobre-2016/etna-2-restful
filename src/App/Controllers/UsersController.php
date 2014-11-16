@@ -11,6 +11,10 @@ use Symfony\Component\HttpFoundation\ParameterBag as SilexParameterBag;
 
 class UsersController extends ApplicationController
 {
+    const ROLE_UNDEFINED    = 0;
+    const ROLE_NORMAL       = 1;
+    const ROLE_ADMIN        = 2;
+
     static public function initRoutes(Application $app)
     {
         $silex  = $app->getSilexApplication();
@@ -88,7 +92,7 @@ class UsersController extends ApplicationController
                     );
                 }
                 return new SilexResponse(
-                    $app->serialize($user->all(['password']), $format),
+                    $app->serialize($user->all(['password', 'SYS_ROLE']), $format),
                     self::STATUS_OK,
                     $headers
                 );
@@ -138,7 +142,7 @@ class UsersController extends ApplicationController
             $pdoStatement = $app->db->executeQuery($sql, $params);
             $user->set('id', $app->db->lastInsertId());
             return new SilexResponse(
-                $app->serialize($user->all(['password']), $format),
+                $app->serialize($user->all(['password', 'SYS_ROLE']), $format),
                 self::STATUS_CREATED,
                 $headers
             );
@@ -270,6 +274,43 @@ class UsersController extends ApplicationController
                 self::STATUS_INTERNAL_ERROR,
                 $headers
             );
+        }
+    }
+    static public function authenticate(Application $app, SilexRequest $request, $credentials)
+    {
+        if (empty($credentials['username']) || empty($credentials['password']))
+        {
+            return false;
+        }
+        try{
+            $sql = 'SELECT * FROM user WHERE email = :username AND password = :password';
+            $types = [PDO::PARAM_STR, PDO::PARAM_STR];
+            $pdoStatement = $app->db->executeQuery($sql, $credentials, $types);
+            $result = $pdoStatement->fetch(PDO::FETCH_ASSOC);
+
+            if ($result === false)
+            {
+                return false;
+            }
+            $user = new User($result);
+            switch ($user->get('role'))
+            {
+                case 'admin':
+                    $user->set('SYS_ROLE', self::ROLE_ADMIN);
+                    break;
+                case 'normal':
+                    $user->set('SYS_ROLE', self::ROLE_NORMAL);
+                    break;
+                default:
+                    $user->set('SYS_ROLE', self::ROLE_UNDEFINED);
+                    break;
+            }
+            $app->setUser($user);
+            return true;
+        }
+        catch (DBALException $e){
+            $app->logger->addError($e->getMessage());
+            return false;
         }
     }
 }

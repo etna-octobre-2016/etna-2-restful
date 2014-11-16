@@ -4,12 +4,13 @@ use App\ApplicationModel as ApplicationModel;
 
 class UserModel extends ApplicationModel
 {
-    protected $email;
-    protected $firstname;
-    protected $id;
-    protected $lastname;
-    protected $password;
-    protected $role;
+    protected   $email;
+    protected   $firstname;
+    protected   $id;
+    protected   $lastname;
+    protected   $password;
+    protected   $role;
+    protected   $SYS_ROLE;
 
     function __construct($user)
     {

@@ -13,6 +13,7 @@ class Application
 
     private $cfg;
     private $silexApplication;
+    private $user;
 
     /* Méthodes magiques */
 
@@ -23,6 +24,7 @@ class Application
         $this->_setRoutes();
         $this->_parseData();
         $this->_removeRequestUriSlash();
+        $this->_initAuthentication();
     }
 
     /* Méthodes publiques */
@@ -55,6 +57,10 @@ class Application
     public function serialize($data, $format)
     {
         return $this->silexApplication['serializer']->serialize($data, $format);
+    }
+    public function setUser($userModel)
+    {
+        $this->user = $userModel;
     }
 
     /* Méthodes privées */
@@ -123,5 +129,23 @@ class Application
     private function _removeRequestUriSlash()
     {
         $_SERVER['REQUEST_URI'] = rtrim($_SERVER['REQUEST_URI'], '/') . '/';
+    }
+    private function _initAuthentication()
+    {
+        $this->silexApplication->before(function(SilexRequest $request){
+
+            $isAuthenticated = Controllers\UsersController::authenticate($this, $request, [
+                'username'  => $request->server->get('PHP_AUTH_USER'),
+                'password'  => $request->server->get('PHP_AUTH_PW')
+            ]);
+
+            var_dump(
+                [
+                    'isAuthenticated'   => $isAuthenticated,
+                    'role'              => $this->user
+                ]
+            );
+
+        });
     }
 }
