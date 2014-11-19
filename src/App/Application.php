@@ -142,30 +142,22 @@ class Application
                 'username'  => $request->server->get('PHP_AUTH_USER'),
                 'password'  => $request->server->get('PHP_AUTH_PW')
             ]);
-
-        $format = 'json';
-        $headers = ['Content-Type' => 'application/json'];
-        if (!$isAuthenticated)
-        {
-            return new SilexResponse(
-                $app->serialize(
-                    [
-                        'status'    => Controllers\UsersController::STATUS_UNAUTHORIZED
-                    ],
-                    $format
-                ),
-                Controllers\UsersController::STATUS_UNAUTHORIZED,
-                $headers
-            );
-        }
-
-            var_dump(
-                [
-                    'isAuthenticated'   => $isAuthenticated,
-                    'role'              => $this->user
-                ]
-            );
-
+            $format = 'json';
+            $headers = ['Content-Type' => 'application/json'];
+            if (!$isAuthenticated)
+            {
+                return new SilexResponse(
+                    $this->serialize(
+                        [
+                            'status'    => Controllers\UsersController::STATUS_UNAUTHORIZED,
+                            'message'   => 'Bad credentials'
+                        ],
+                        $format
+                    ),
+                    Controllers\UsersController::STATUS_UNAUTHORIZED,
+                    $headers
+                );
+            }
         });
     }
 }
