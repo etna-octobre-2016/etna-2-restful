@@ -143,6 +143,22 @@ class Application
                 'password'  => $request->server->get('PHP_AUTH_PW')
             ]);
 
+        $format = 'json';
+        $headers = ['Content-Type' => 'application/json'];
+        if (!$isAuthenticated)
+        {
+            return new SilexResponse(
+                $app->serialize(
+                    [
+                        'status'    => Controllers\UsersController::STATUS_UNAUTHORIZED
+                    ],
+                    $format
+                ),
+                Controllers\UsersController::STATUS_UNAUTHORIZED,
+                $headers
+            );
+        }
+
             var_dump(
                 [
                     'isAuthenticated'   => $isAuthenticated,

@@ -130,6 +130,20 @@ class UsersController extends ApplicationController
         $format = 'json';
         $headers = ['Content-Type' => 'application/json'];
         $user = new User($request->request->all());
+        $sys_user = $app->getuser();
+        if($sys_user->get('role') != self::ROLE_ADMIN)
+        {
+            return new SilexResponse(
+                $app->serialize(
+                    [
+                        'status'    => self::STATUS_UNAUTHORIZED
+                    ],
+                    $format
+                ),
+                self::STATUS_UNAUTHORIZED,
+                $headers
+            );
+        }
         try{
             $sql = 'INSERT INTO user (lastname, firstname, email, password, role) VALUES (:lastname, :firstname, :email, :password, :role)';
             $params = [
@@ -178,6 +192,20 @@ class UsersController extends ApplicationController
                     $format
                 ),
                 self::STATUS_CONFLICT,
+                $headers
+            );
+        }
+        $sys_user = $app->getuser();
+        if($sys_user->get('role') != self::ROLE_ADMIN && $sys_user->get('id') != $id)
+        {
+            return new SilexResponse(
+                $app->serialize(
+                    [
+                        'status'    => self::STATUS_UNAUTHORIZED
+                    ],
+                    $format
+                ),
+                self::STATUS_UNAUTHORIZED,
                 $headers
             );
         }
