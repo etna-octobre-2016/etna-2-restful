@@ -195,20 +195,6 @@ class UsersController extends ApplicationController
                 $headers
             );
         }
-        $sys_user = $app->getuser();
-        if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN && $user->get('role') == 'admin')
-        {
-            return new SilexResponse(
-                $app->serialize(
-                    [
-                        'status'    => self::STATUS_UNAUTHORIZED
-                    ],
-                    $format
-                ),
-                self::STATUS_UNAUTHORIZED,
-                $headers
-            );
-        }
         try{
             $id = (int)$id;
             $user = [
@@ -218,6 +204,20 @@ class UsersController extends ApplicationController
                 'password'  => $request->request->get('password'),
                 'role'      => $request->request->get('role')
             ];
+            $sys_user = $app->getuser();
+            if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN && $user['role'] == 'admin')
+            {
+                return new SilexResponse(
+                    $app->serialize(
+                        [
+                            'status'    => self::STATUS_UNAUTHORIZED
+                        ],
+                        $format
+                    ),
+                    self::STATUS_UNAUTHORIZED,
+                    $headers
+                );
+            }
             foreach ($user as $k => $v)
             {
                 if ($v === null)
