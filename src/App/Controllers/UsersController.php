@@ -196,7 +196,7 @@ class UsersController extends ApplicationController
             );
         }
         $sys_user = $app->getuser();
-        if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN && $sys_user->get('id') != $id)
+        if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN && $user->get('role') == 'admin')
         {
             return new SilexResponse(
                 $app->serialize(
@@ -273,7 +273,7 @@ class UsersController extends ApplicationController
         }
 
         $sys_user = $app->getuser();
-        if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN && $sys_user->get('id') != $id)
+        if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN && $user->get('role') == 'admin')
         {
             return new SilexResponse(
                 $app->serialize(
