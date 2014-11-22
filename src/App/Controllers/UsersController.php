@@ -266,7 +266,7 @@ class UsersController extends ApplicationController
                 $app->serialize(
                     [
                         'status'    => self::STATUS_OK,
-                        'message'   => $user['email'],
+                        'message'   => self::MSG_RESOURCE_UPDATED,
                     ],
                     $format
                 ),
