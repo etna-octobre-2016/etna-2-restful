@@ -149,12 +149,12 @@ class Application
                 return new SilexResponse(
                     $this->serialize(
                         [
-                            'status'    => Controllers\UsersController::STATUS_UNAUTHORIZED,
-                            'message'   => 'Bad credentials'
+                            'status'    => 401,
+                            'message'   => 'error authentication'
                         ],
                         $format
                     ),
-                    Controllers\UsersController::STATUS_UNAUTHORIZED,
+                    401,
                     $headers
                 );
             }
