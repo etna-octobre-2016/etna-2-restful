@@ -204,9 +204,8 @@ class UsersController extends ApplicationController
                 'password'  => $request->request->get('password'),
                 'role'      => $request->request->get('role')
             ];
-            $userbis = new User($request->request->all());
             $sys_user = $app->getuser();
-            if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN && $user['role'] == 'admin')
+            if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN)
             {
                 return new SilexResponse(
                     $app->serialize(
@@ -232,7 +231,7 @@ class UsersController extends ApplicationController
                 $app->serialize(
                     [
                         'status'    => self::STATUS_OK,
-                        'message'   => $userbis->get('role')
+                        'message'   => self::MSG_RESOURCE_UPDATED,
                     ],
                     $format
                 ),
