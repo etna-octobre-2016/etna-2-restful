@@ -231,7 +231,7 @@ class UsersController extends ApplicationController
                 $app->serialize(
                     [
                         'status'    => self::STATUS_OK,
-                        'message'   => $user->get('role'),
+                        'message'   => $request->request->get('role'),
                     ],
                     $format
                 ),
