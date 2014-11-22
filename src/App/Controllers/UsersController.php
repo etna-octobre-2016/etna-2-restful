@@ -125,6 +125,39 @@ class UsersController extends ApplicationController
             );
         }
     }
+
+    static private function _get(Application $app, $id)
+    {
+        try{
+            $sql = 'SELECT * FROM user WHERE id = :id';
+            $params = [':id' => (int)$id];
+            $types = [PDO::PARAM_INT];
+            $pdoStatement = $app->db->executeQuery($sql, $params, $types);
+            $result = $pdoStatement->fetch(PDO::FETCH_ASSOC);
+            if ($result !== false)
+            {
+                $user = new User($result);
+                return $user;
+            }
+
+        }
+        catch (DBALException $e)
+        {
+            $app->logger->addError($e->getMessage());
+            return new SilexResponse(
+                $app->serialize(
+                    [
+                        'status'    => self::STATUS_INTERNAL_ERROR,
+                        'message'   => self::MSG_DATABASE_ERROR
+                    ],
+                    $format
+                ),
+                self::STATUS_INTERNAL_ERROR,
+                $headers
+            );
+        }
+    }
+
     static public function post(Application $app, SilexRequest $request)
     {
         $format = 'json';
@@ -204,8 +237,10 @@ class UsersController extends ApplicationController
                 'password'  => $request->request->get('password'),
                 'role'      => $request->request->get('role')
             ];
+
+            $userdata = _get($app, $id);
             $sys_user = $app->getuser();
-            if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN)
+            if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN && $userdata->get('role') == 'admin')
             {
                 return new SilexResponse(
                     $app->serialize(
@@ -272,9 +307,9 @@ class UsersController extends ApplicationController
                 $headers
             );
         }
-
+        $userdata = _get($app, $id);
         $sys_user = $app->getuser();
-        if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN)
+        if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN && $userdata->get('role') == 'admin')
         {
             return new SilexResponse(
                 $app->serialize(
