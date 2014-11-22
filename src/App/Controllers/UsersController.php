@@ -218,7 +218,7 @@ class UsersController extends ApplicationController
                     $headers
                 );
             }
-            var_dump($user);
+
             foreach ($user as $k => $v)
             {
                 if ($v === null)
@@ -231,7 +231,7 @@ class UsersController extends ApplicationController
                 $app->serialize(
                     [
                         'status'    => self::STATUS_OK,
-                        'message'   => self::MSG_RESOURCE_UPDATED
+                        'message'   => $user['role'],
                     ],
                     $format
                 ),
