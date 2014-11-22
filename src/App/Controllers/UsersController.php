@@ -218,7 +218,7 @@ class UsersController extends ApplicationController
                     $headers
                 );
             }
-            echo $user['role'];
+            var_dump($user);
             foreach ($user as $k => $v)
             {
                 if ($v === null)
