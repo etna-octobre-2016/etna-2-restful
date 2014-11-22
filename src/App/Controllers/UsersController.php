@@ -307,7 +307,7 @@ class UsersController extends ApplicationController
                 $headers
             );
         }
-        $userdata = _get($app, $id);
+        $userdata = self::_get($app, $id);
         $sys_user = $app->getuser();
         if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN && $userdata->get('role') == 'admin')
         {
