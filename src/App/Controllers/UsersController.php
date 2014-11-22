@@ -218,6 +218,7 @@ class UsersController extends ApplicationController
                     $headers
                 );
             }
+            echo $user->get('role');
             foreach ($user as $k => $v)
             {
                 if ($v === null)
