@@ -205,7 +205,7 @@ class UsersController extends ApplicationController
                 'role'      => $request->request->get('role')
             ];
             $sys_user = $app->getuser();
-            if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN && $user->get('role') == 'admin')
+            if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN && $user['role'] == 'admin')
             {
                 return new SilexResponse(
                     $app->serialize(
@@ -218,7 +218,7 @@ class UsersController extends ApplicationController
                     $headers
                 );
             }
-            echo $user->get('role');
+            echo $user['role'];
             foreach ($user as $k => $v)
             {
                 if ($v === null)
