@@ -74,10 +74,11 @@ class UsersController extends ApplicationController
             $types = [PDO::PARAM_INT];
             $pdoStatement = $app->db->executeQuery($sql, $params, $types);
             $result = $pdoStatement->fetch(PDO::FETCH_ASSOC);
+            $sys_user = $app->getuser();
             if ($result !== false)
             {
                 $user = new User($result);
-                if ($user->get('role') === 'admin')
+                if (if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN && $user->get('role') === 'admin')
                 {
                     return new SilexResponse(
                         $app->serialize(

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/vendors/monolog/monolog/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/monolog/monolog/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/pimple/pimple/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/psr/log" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/silex/silex/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/silex/silex/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/symfony/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/symfony/serializer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/symfony/http-foundation" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/symfony/http-kernel" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/symfony/routing" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/symfony/event-dispatcher" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/doctrine/common/tests/Doctrine/Tests/Common" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/doctrine/dbal/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/doctrine/dbal/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/doctrine/cache/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/doctrine/common/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/doctrine/inflector/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/doctrine/annotations/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/doctrine/collections/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/doctrine/common/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/doctrine/lexer/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/doctrine/cache/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/doctrine/collections/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/doctrine/inflector/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendors/doctrine/annotations/lib" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="PHARS">
+        <CLASSES>
+          <root url="phar://$MODULE_DIR$/composer.phar" />
+        </CLASSES>
+        <SOURCES>
+          <root url="phar://$MODULE_DIR$/composer.phar" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>
+
