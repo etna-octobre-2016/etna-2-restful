@@ -78,7 +78,7 @@ class UsersController extends ApplicationController
             if ($result !== false)
             {
                 $user = new User($result);
-                if (if($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN && $user->get('role') === 'admin')
+                if ($sys_user->get('SYS_ROLE') != self::ROLE_ADMIN && $user->get('role') === 'admin')
                 {
                     return new SilexResponse(
                         $app->serialize(
